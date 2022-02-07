@@ -108,7 +108,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         return mProductList.get(position).getId();
     }
 
-    static class ProductViewHolder extends RecyclerView.ViewHolder {
+    static class    ProductViewHolder extends RecyclerView.ViewHolder {
 
         final ProductItemBinding binding;
 

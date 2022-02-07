@@ -49,11 +49,11 @@ public class DataGenerator {
         for (int i = 0; i < FIRST.length; i++) {
             for (int j = 0; j < SECOND.length; j++) {
                 ProductEntity product = new ProductEntity();
-                product.setName(BRANDS[i] + " " + FIRST[i] + " " + SECOND[j]);
+                product.setName(BRANDS[rnd.nextInt(3)] + " " + FIRST[i] + " " + SECOND[j]);
                 product.setDescription(product.getName() + " " + DESCRIPTION[j]);
                 product.setPrice(rnd.nextInt(240));
                 product.setId(FIRST.length * i + j + 1);
-                product.setBrand(BRANDS[i]);
+                product.setBrand(BRANDS[rnd.nextInt(3)]);
                 products.add(product);
             }
         }
