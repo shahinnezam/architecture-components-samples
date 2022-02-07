@@ -37,7 +37,7 @@ import com.example.android.persistence.db.entity.ProductEntity;
 import com.example.android.persistence.db.entity.ProductFtsEntity;
 import java.util.List;
 
-@Database(entities = {ProductEntity.class, ProductFtsEntity.class, CommentEntity.class}, version = 2)
+@Database(entities = {ProductEntity.class, ProductFtsEntity.class, CommentEntity.class}, version = 3)
 @TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -70,7 +70,7 @@ public abstract class AppDatabase extends RoomDatabase {
      * The SQLite database is only created when it's accessed for the first time.
      */
     private static AppDatabase buildDatabase(final Context appContext,
-            final AppExecutors executors) {
+                                             final AppExecutors executors) {
         return Room.databaseBuilder(appContext, AppDatabase.class, DATABASE_NAME)
                 .addCallback(new Callback() {
                     @Override
@@ -91,8 +91,8 @@ public abstract class AppDatabase extends RoomDatabase {
                         });
                     }
                 })
-            .addMigrations(MIGRATION_1_2)
-            .build();
+                .addMigrations(MIGRATION_1_3)
+                .build();
     }
 
     /**
@@ -109,7 +109,7 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     private static void insertData(final AppDatabase database, final List<ProductEntity> products,
-            final List<CommentEntity> comments) {
+                                   final List<CommentEntity> comments) {
         database.runInTransaction(() -> {
             database.productDao().insertAll(products);
             database.commentDao().insertAll(comments);
@@ -127,14 +127,14 @@ public abstract class AppDatabase extends RoomDatabase {
         return mIsDatabaseCreated;
     }
 
-    private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+    private static final Migration MIGRATION_1_3 = new Migration(1, 3) {
 
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("CREATE VIRTUAL TABLE IF NOT EXISTS `productsFts` USING FTS4("
-                + "`name` TEXT, `description` TEXT, content=`products`)");
-            database.execSQL("INSERT INTO productsFts (`rowid`, `name`, `description`) "
-                + "SELECT `id`, `name`, `description` FROM products");
+                    + "`name` TEXT, `description` TEXT, content=`products`)");
+            database.execSQL("INSERT INTO productsFts (`rowid`, `name`, `description`, `brand`) "
+                    + "SELECT `id`, `name`, `description`, `brand` FROM products");
 
         }
     };
